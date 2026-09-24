@@ -13,7 +13,7 @@
 	};
 </script>
 
-<div class="flex flex-col gap-8">
+<div class="flex flex-col gap-4">
 	<div class="flex flex-col gap-1">
 		Input your message ({message.length}/400):
 		<textarea bind:value={message} class="h-32 border px-1" maxlength="400"></textarea>

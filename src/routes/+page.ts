@@ -2,7 +2,7 @@ import type { PageLoad } from './$types';
 
 export const ssr = false;
 
-export const load: PageLoad = async () => {
+export const load: PageLoad = async ({ url }) => {
     const keyPair = await window.crypto.subtle.generateKey(
         {
             name: 'RSA-OAEP',
@@ -13,5 +13,5 @@ export const load: PageLoad = async () => {
         false,
         ['encrypt', 'decrypt']
     );
-    return keyPair as CryptoKeyPair;
+    return { url, ...(keyPair as CryptoKeyPair) };
 };

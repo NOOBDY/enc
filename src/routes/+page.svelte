@@ -1,36 +1,57 @@
 <script lang="ts">
-	import { base64ToPublicKey, publicKeyToBase64 } from '$lib/base64';
-	import { decrypt, encrypt } from '$lib/encryption';
+	import { publicKeyToBase64 } from '$lib/base64';
+	import { decrypt } from '$lib/encryption';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 
 	const publicKeyB64 = $derived(await publicKeyToBase64(data.publicKey));
 
-	let message = $state('');
+	let ciphertext = $state('');
 
-	const publicKey = $derived(await base64ToPublicKey(publicKeyB64));
-	const encrypted = $derived(await encrypt(message, publicKey));
+	const shareLink = $derived(() => {
+		const url = new URL('/enc', data.url);
+		url.searchParams.set('publicKey', publicKeyB64);
 
-	const decrypted = $derived(await decrypt(encrypted, data.privateKey));
+		return url.toString();
+	});
+
+	const handleCopy = async () => {
+		await navigator.clipboard.writeText(shareLink());
+	};
 </script>
 
-<input bind:value={message} class="border" />
+<div class="flex flex-col gap-4">
+	<div class="flex flex-col gap-1">
+		Input your ciphertext:
+		<textarea bind:value={ciphertext} class="h-32 border px-1 break-all"></textarea>
+	</div>
 
-<p class="w-3xl">
-	public key base64:<br />
-	<code class="break-all">
-		{publicKeyB64}
-	</code>
-</p>
+	{#if ciphertext.length > 0}
+		{#await decrypt(ciphertext, data.privateKey) then decrypted}
+			<div class="flex flex-col gap-1">
+				<p>
+					Decrypted message: <br />
+					{decrypted}
+				</p>
+			</div>
+		{:catch}
+			Invalid ciphertext
+		{/await}
+	{/if}
 
-<p class="w-3xl">
-	encrypted message: <br />
-	<code class="break-all">
-		{encrypted}
-	</code>
-</p>
+	<div class="flex flex-col gap-1">
+		<div class="flex w-full flex-col items-center justify-center">
+			<div>
+				Share link: <br />
+				<p class="break-all">
+					{shareLink()}
+				</p>
+			</div>
 
-<p>
-	decrypted message: {decrypted}
-</p>
+			<button onclick={handleCopy} class="cursor-pointer border px-4 py-1 hover:outline">
+				Copy
+			</button>
+		</div>
+	</div>
+</div>
