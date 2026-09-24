@@ -7,7 +7,7 @@
 
 	const publicKeyB64 = $derived(await publicKeyToBase64(data.publicKey));
 
-	const message = 'test';
+	let message = $state('');
 
 	const publicKey = $derived(await base64ToPublicKey(publicKeyB64));
 	const encrypted = $derived(await encrypt(message, publicKey));
@@ -15,16 +15,18 @@
 	const decrypted = $derived(await decrypt(encrypted, data.privateKey));
 </script>
 
-<p>
+<input bind:value={message} class="border" />
+
+<p class="w-3xl">
 	public key base64:<br />
-	<code>
+	<code class="break-all">
 		{publicKeyB64}
 	</code>
 </p>
 
-<p>
+<p class="w-3xl">
 	encrypted message: <br />
-	<code>
+	<code class="break-all">
 		{encrypted}
 	</code>
 </p>
