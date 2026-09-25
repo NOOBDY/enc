@@ -26,7 +26,7 @@
 				{encrypted}
 			</code>
 
-			<div class="flex w-full items-center justify-center">
+			<div class="flex items-center justify-center">
 				<button onclick={handleCopy} class="cursor-pointer border px-4 py-1 hover:outline">
 					Copy
 				</button>

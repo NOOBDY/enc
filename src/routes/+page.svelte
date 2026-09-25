@@ -41,17 +41,15 @@
 	{/if}
 
 	<div class="flex flex-col gap-1">
-		<div class="flex w-full flex-col items-center justify-center">
-			<div>
-				Share link: <br />
-				<p class="break-all">
-					{shareLink()}
-				</p>
-			</div>
+		Share link: <br />
+		<a href={shareLink()} class="break-all underline" target="_blank" rel="external noopener noreferrer">
+			{shareLink()}
+		</a>
+	</div>
 
-			<button onclick={handleCopy} class="cursor-pointer border px-4 py-1 hover:outline">
-				Copy
-			</button>
-		</div>
+	<div class="flex items-center justify-center">
+		<button onclick={handleCopy} class="cursor-pointer border px-4 py-1 hover:outline">
+			Copy
+		</button>
 	</div>
 </div>
